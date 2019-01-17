@@ -15,6 +15,7 @@
 - (void)setImages:(NSArray *)images {
     __weak RCTImageSequenceView *weakSelf = self;
 
+    self.contentMode = UIViewContentModeScaleAspectFill;
     self.animationImages = nil;
 
     _activeTasks = [NSMutableDictionary new];
