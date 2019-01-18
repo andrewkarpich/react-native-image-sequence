@@ -4,6 +4,7 @@
 //
 
 #import "RCTViewManager.h"
+#import "RCTComponent.h"
 
 @interface RCTImageSequenceManager : RCTViewManager
 @end
