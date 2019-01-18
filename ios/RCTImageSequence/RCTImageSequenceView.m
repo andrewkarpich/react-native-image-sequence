@@ -24,6 +24,7 @@
 
     self.contentMode = UIViewContentModeScaleAspectFill;
     self.animationImages = nil;
+    self.image = nil;
 
     _activeTasks = [NSMutableDictionary new];
     _imagesLoaded = [NSMutableDictionary new];
@@ -71,11 +72,13 @@
 
     [_imagesLoaded removeAllObjects];
 
-    self.image = nil;
     self.animationDuration = images.count * (1.0f / _framesPerSecond);
     self.animationImages = images;
     self.animationRepeatCount = _loop ? 0 : 1;
     [self startAnimating];
+
+    self.image = images[images.count-1];
+
     VoidBlock onStart = _onAnimationStart;
     if (onStart) {
         onStart();
