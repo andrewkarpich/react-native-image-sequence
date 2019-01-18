@@ -9,6 +9,11 @@ import android.util.Log;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -141,17 +146,49 @@ public class RCTImageSequenceView extends ImageView {
     }
 
     private void setupAnimationDrawable() {
+
         AnimationDrawable animationDrawable = new AnimationDrawable();
+
         for (int index = 0; index < bitmaps.size(); index++) {
             BitmapDrawable drawable = new BitmapDrawable(this.getResources(), bitmaps.get(index));
             animationDrawable.addFrame(drawable, 1000 / framesPerSecond);
         }
 
-        animationDrawable.setOneShot(!this.loop);
+
+
+        CustomAnimationDrawable cad = new CustomAnimationDrawable(animationDrawable){
+
+            @Override
+            public void onAnimationFinish() { onReceiveNativeEventOnFinish(); }
+
+            @Override
+            public void onAnimationStart() { onReceiveNativeEventOnStart(); }
+
+        };
+
+        cad.setOneShot(!this.loop);
 
         this.setScaleType(ScaleType.CENTER_CROP);
-        this.setImageDrawable(animationDrawable);
+        this.setImageDrawable(cad);
 
-        animationDrawable.start();
+        cad.start();
+    }
+
+    public void onReceiveNativeEventOnFinish() {
+        WritableMap event = Arguments.createMap();
+        ReactContext reactContext = (ReactContext)getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "onFinish",
+                event);
+    }
+
+    public void onReceiveNativeEventOnStart() {
+        WritableMap event = Arguments.createMap();
+        ReactContext reactContext = (ReactContext)getContext();
+        reactContext.getJSModule(RCTEventEmitter.class).receiveEvent(
+                getId(),
+                "onStart",
+                event);
     }
 }
