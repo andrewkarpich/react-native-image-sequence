@@ -85,7 +85,7 @@
         dispatch_time_t finishTime = dispatch_time(DISPATCH_TIME_NOW,
                                                    self.animationDuration * self.animationRepeatCount * NSEC_PER_SEC);
         dispatch_after(finishTime, dispatch_get_main_queue(), ^{
-            RCTBubblingEventBlock onFinish = self.onAnimationFinish
+            RCTBubblingEventBlock onFinish = self.onAnimationFinish;
             if (onFinish) {
                 onFinish(@{});
             }
