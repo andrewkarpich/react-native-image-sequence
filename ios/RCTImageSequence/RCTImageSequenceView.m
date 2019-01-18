@@ -25,7 +25,7 @@
 
     self.contentMode = UIViewContentModeScaleAspectFill;
     self.animationImages = nil;
-    self.image = nil;
+    // self.image = nil;
 
     _activeTasks = [NSMutableDictionary new];
     _imagesLoaded = [NSMutableDictionary new];
