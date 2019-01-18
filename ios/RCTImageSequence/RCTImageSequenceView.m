@@ -86,7 +86,9 @@
                                                    self.animationDuration * self.animationRepeatCount * NSEC_PER_SEC);
         dispatch_after(finishTime, dispatch_get_main_queue(), ^{
             RCTBubblingEventBlock onFinish = self.onAnimationFinish
-            onFinish(@{})
+            if (onFinish) {
+                onFinish(@{});
+            }
         });
     }
 }
