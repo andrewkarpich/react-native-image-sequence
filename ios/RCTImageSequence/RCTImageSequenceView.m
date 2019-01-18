@@ -4,11 +4,12 @@
 //
 
 #import "RCTImageSequenceView.h"
+#import "RCTComponent.h"
 
 @interface RCTImageSequenceView ()
 
-@property (nonatomic, copy) VoidBlock onAnimationStart;
-@property (nonatomic, copy) VoidBlock onAnimationFinish;
+@property (nonatomic, copy) RCTBubblingEventBlock onAnimationStart;
+@property (nonatomic, copy) RCTBubblingEventBlock onAnimationFinish;
 
 @end
 
@@ -79,14 +80,19 @@
 
     self.image = images[images.count-1];
 
-    VoidBlock onStart = _onAnimationStart;
+    RCTBubblingEventBlock onStart = _onAnimationStart;
     if (onStart) {
-        onStart();
+        onStart(@{});
     }
     if (!_loop) {
         dispatch_time_t finishTime = dispatch_time(DISPATCH_TIME_NOW,
                                                    self.animationDuration * self.animationRepeatCount * NSEC_PER_SEC);
-        dispatch_after(finishTime, dispatch_get_main_queue(), _onAnimationFinish);
+        dispatch_after(finishTime, dispatch_get_main_queue(), ^{
+            RCTBubblingEventBlock onFinish = self.onAnimationFinish;
+            if (onFinish) {
+                onFinish(@{});
+            }
+        });
     }
 }
 
