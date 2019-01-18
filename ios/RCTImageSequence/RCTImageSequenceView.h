@@ -5,6 +5,8 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void (^VoidBlock)(void);
+
 @interface RCTImageSequenceView : UIImageView
 
 

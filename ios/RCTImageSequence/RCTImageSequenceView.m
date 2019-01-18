@@ -5,6 +5,13 @@
 
 #import "RCTImageSequenceView.h"
 
+@interface RCTImageSequenceView ()
+
+@property (nonatomic, copy) VoidBlock onAnimationStart;
+@property (nonatomic, copy) VoidBlock onAnimationFinish;
+
+@end
+
 @implementation RCTImageSequenceView {
     NSUInteger _framesPerSecond;
     NSMutableDictionary *_activeTasks;
@@ -69,6 +76,15 @@
     self.animationImages = images;
     self.animationRepeatCount = _loop ? 0 : 1;
     [self startAnimating];
+    VoidBlock onStart = _onAnimationStart;
+    if (onStart) {
+        onStart();
+    }
+    if (!_loop) {
+        dispatch_time_t finishTime = dispatch_time(DISPATCH_TIME_NOW,
+                                                   self.animationDuration * self.animationRepeatCount * NSEC_PER_SEC);
+        dispatch_after(finishTime, dispatch_get_main_queue(), _onAnimationFinish);
+    }
 }
 
 - (void)setFramesPerSecond:(NSUInteger)framesPerSecond {
